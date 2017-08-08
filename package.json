@@ -31,5 +31,8 @@
   "bugs": {
     "url": "https://github.com/oronbz/homebridge-omxplayer/issues"
   },
-  "homepage": "https://github.com/oronbz/homebridge-omxplayer#readme"
+  "homepage": "https://github.com/oronbz/homebridge-omxplayer#readme",
+  "dependencies": {
+    "tree-kill": "^1.1.0"
+  }
 }
