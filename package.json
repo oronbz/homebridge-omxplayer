@@ -1,0 +1,30 @@
+{
+  "name": "homebridge-plugin-player",
+  "version": "1.0.0",
+  "description": "Play or stop any youtube/videos/music/sounds https://github.com/oronbz/homebridge-plugin-player.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/oronbz/homebridge-plugin-player.git"
+  },
+  "keywords": [
+    "youtube",
+    "player",
+    "video",
+    "audio",
+    "songs",
+    "switch",
+    "mp4",
+    "omxplayer",
+    "youtube-dl"
+  ],
+  "author": "Oron Ben Zvi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/oronbz/homebridge-plugin-player/issues"
+  },
+  "homepage": "https://github.com/oronbz/homebridge-plugin-player#readme"
+}
