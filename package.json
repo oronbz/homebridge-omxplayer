@@ -1,14 +1,14 @@
 {
-  "name": "homebridge-plugin-player",
+  "name": "homebridge-omxplayer",
   "version": "1.0.0",
-  "description": "Play or stop any youtube/videos/music/sounds https://github.com/oronbz/homebridge-plugin-player.",
+  "description": "Play or stop any youtube/videos/audio using omxplayer on raspberry pi https://github.com/oronbz/homebridge-omxplayer.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/oronbz/homebridge-plugin-player.git"
+    "url": "git://github.com/oronbz/homebridge-omxplayer.git"
   },
   "keywords": [
     "youtube",
@@ -24,7 +24,7 @@
   "author": "Oron Ben Zvi",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/oronbz/homebridge-plugin-player/issues"
+    "url": "https://github.com/oronbz/homebridge-omxplayer/issues"
   },
-  "homepage": "https://github.com/oronbz/homebridge-plugin-player#readme"
+  "homepage": "https://github.com/oronbz/homebridge-omxplayer#readme"
 }
