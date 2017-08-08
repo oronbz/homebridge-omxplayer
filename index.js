@@ -10,11 +10,11 @@ module.exports = function(homebridge) {
 
 function OmxPlayer(log, config) {
     this.log = log;
-    this.name = config.name;
+    this.name = config.name
     
     this._service = new Service.Switch(this.name);
     this._service.getCharacteristic(Characteristic.On)
-        .on('set', this._setOn.bind(this));
+        .on('set', this._setOn.bind(this))
 }
 
 OmxPlayer.prototype.getServices = function() {
@@ -23,14 +23,12 @@ OmxPlayer.prototype.getServices = function() {
 
 OmxPlayer.prototype._setOn = function(on, callback) {
     
-    this.log("Setting omxplayer switch to " + on);
+    this.log("Setting omxplayer switch to " + on)
     
     if (on) {
-        this.log("playing the song");
-        this._service.setCharacteristic(Characteristic.On, false);
+        this.log("playing the song")
     } else {
-        this.log("killing omx player");
-        this._service.setCharacteristic(Characteristic.On, true);
+        this.log("killing omx player")
     }
-    callback();
+    callback()
 }
