@@ -19,7 +19,8 @@
     "switch",
     "mp4",
     "omxplayer",
-    "youtube-dl"
+    "youtube-dl",
+    "homebridge-plugin"
   ],
   "author": "Oron Ben Zvi",
   "license": "ISC",
