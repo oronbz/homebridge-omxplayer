@@ -1,4 +1,5 @@
 var Player = require('./lib/player');
+var downloader = require('./lib/downloader');
 var Service, Characteristic;
 
 module.exports = function(homebridge) {
@@ -14,6 +15,7 @@ function OmxPlayer(log, config) {
     this.log = log;
     this.name = config.name;
     this.filename = config.filename;
+    this.youtube = config.youtube;
     this.player = null;
     
     this._service = new Service.Switch(this.name);
@@ -30,11 +32,23 @@ OmxPlayer.prototype._setOn = function(on, callback) {
     this.log('Setting omxplayer switch to ' + on);
     
     if (on) {
-        this.log('playing the song');
-        this.player = new Player(this.filename, 'both', false);
+        if (this.youtube) {
+            this.log('Youtube url found in config, downloading...');
+            var self = this;
+            downloader.download(this.youtube, this.log, function (filename) {
+                self.log('Playing downloaded file.');
+                self.player = new Player(filename, 'both', false);
+                callback();            
+            });
+        } else if (this.filename) {
+            this.log('Filename found, playing video.');
+            this.player = new Player(this.filename, 'both', false);
+            callback();
+        }
     } else {
-        this.log("killing omx player");
+        this.log('Stopping player.');
         this.player.quit();
+        callback();
     }
-    callback();
+    
 }
