@@ -1,5 +1,4 @@
-var exec = require("child_process").exec;
-var kill = require("tree-kill");
+var Player = require('./lib/player');
 var Service, Characteristic;
 
 module.exports = function(homebridge) {
@@ -7,14 +6,15 @@ module.exports = function(homebridge) {
     Service = homebridge.hap.Service;
     Characteristic = homebridge.hap.Characteristic;
     
-    homebridge.registerAccessory("homebridge-omxplayer", "OmxPlayer", OmxPlayer);
+    homebridge.registerAccessory('homebridge-omxplayer', 'OmxPlayer', OmxPlayer);
 }
 
 function OmxPlayer(log, config) {
-    console.log("OmxPlayer plugin started!");
+    console.log('OmxPlayer plugin started!');
     this.log = log;
     this.name = config.name;
-    this.omxpid = 0;
+    this.filename = config.filename;
+    this.player = null;
     
     this._service = new Service.Switch(this.name);
     this._service.getCharacteristic(Characteristic.On)
@@ -27,14 +27,14 @@ OmxPlayer.prototype.getServices = function() {
 
 OmxPlayer.prototype._setOn = function(on, callback) {
     
-    this.log("Setting omxplayer switch to " + on);
+    this.log('Setting omxplayer switch to ' + on);
     
     if (on) {
-        this.log("playing the song");
-        this.omxpid = exec("omxplayer ~/song.mp4").pid;
+        this.log('playing the song');
+        this.player = new Player(this.filename, 'both', false);
     } else {
         this.log("killing omx player");
-        kill(this.omxpid);
+        this.player.quit();
     }
     callback();
 }

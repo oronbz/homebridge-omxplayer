@@ -33,6 +33,7 @@
   },
   "homepage": "https://github.com/oronbz/homebridge-omxplayer#readme",
   "dependencies": {
-    "tree-kill": "^1.1.0"
+    "node-omxplayer": "^0.6.1",
+    "youtube-dl": "^1.11.1"
   }
 }
