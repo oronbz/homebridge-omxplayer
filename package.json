@@ -1,6 +1,6 @@
 {
   "name": "homebridge-omxplayer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Play or stop any youtube/videos/audio using omxplayer on raspberry pi https://github.com/oronbz/homebridge-omxplayer.",
   "main": "index.js",
   "scripts": {
