@@ -35,7 +35,7 @@ OmxPlayer.prototype._setOn = function(on, callback) {
         if (this.youtube) {
             this.log('Youtube url found in config, downloading...');
             var self = this;
-            downloader.download(this.youtube, this.log, function (filename) {
+            downloader.download(this.youtube, this.log, function (err, filename) {
                 self.log('Playing downloaded file.');
                 self.player = new Player(filename, 'both', false);
                 callback();            
