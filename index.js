@@ -37,12 +37,12 @@ OmxPlayer.prototype._setOn = function(on, callback) {
             var self = this;
             downloader.download(this.youtube, this.log, function (err, filename) {
                 self.log('Playing downloaded file.');
-                self.player = new Player(filename, 'both', false);
+                self.player = new Player(filename, 'both', true);
                 callback();            
             });
         } else if (this.filename) {
             this.log('Filename found, playing video.');
-            this.player = new Player(this.filename, 'both', false);
+            this.player = new Player(this.filename, 'both', true);
             callback();
         }
     } else {
