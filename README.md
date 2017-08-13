@@ -1,16 +1,27 @@
 
 # "OmxPlayer" Plugin
+A Raspberry Pi (only) Plugin to download and play any YouTube video or a local video file using `omxplayer`.
 
 ## Example config.json:
 
+### YouTube Link:
  ```
     "accessories": [
         {
           "accessory": "OmxPlayer",
           "name": "OmxPlayer",
-
           "youtube": "https://www.youtube.com/watch?v=lf_wVfwpfp8"
-          --OR--
+        }   
+    ]
+
+```
+
+### Local File:
+ ```
+    "accessories": [
+        {
+          "accessory": "OmxPlayer",
+          "name": "OmxPlayer",
           "filename": "my_video.mp4"
         }   
     ]
@@ -19,7 +30,10 @@
 
 ## Why do we need this plugin?
 
-With this plugin you can download and play any YouTube video or a local video file using `omxplayer`.
+This plugin is great for getting some music and videos into scenes and automations, for example:
+- It can be used for a "Good Night" scene with a lullaby music for babies (can be done with speakers only connected to Pi).
+- It can play music videos on TV screen (connected to the Raspberry Pi) when "Arrive Home" is triggered.
+- it can be connected to a projector and project any video (I used it for the kids room).
 
 ## How it works
 
@@ -27,10 +41,16 @@ Basically, all you need to do is:
 1. Set the desired youtube url or local filename.
 2. Use this switch in any scene or automation.
 
+When using the switch (with Youtube), only for the first time, the video will be downloaded which should take a few seconds.
+Every time the Raspberry will be rebooted, all saved (youtube) videos will be deleted from the device.
+
 ## How to install
  ```sudo apt-get install omxplayer```
 
  ```sudo npm install -g homebridge-omxplayer```
+
+The raspberry pi should be logged in with the same user that runs homebridge.
+It is suggested to use auto-login when Raspberry rebooted.
 
 ## Troubleshooting
 
