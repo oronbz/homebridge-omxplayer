@@ -55,6 +55,7 @@ OmxPlayer.prototype._setOn = function(on, callback) {
     } else {
         if (this.player) {
             this.player.quit();
+            this.player = null;
         } else {
             this.log('Couldn\'t stop player, please close it manually.');
         }
