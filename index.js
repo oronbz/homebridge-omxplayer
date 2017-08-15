@@ -37,17 +37,25 @@ OmxPlayer.prototype._setOn = function(on, callback) {
             var self = this;
             downloader.download(this.youtube, this.log, function (err, filename) {
                 self.log('Playing downloaded file.');
-                self.player = new Player(filename, 'both', true);
+                if (!self.player) {
+                    self.player = new Player(filename, 'both', true);
+                }
                 callback();            
             });
         } else if (this.filename) {
             this.log('Filename found, playing video.');
-            this.player = new Player(this.filename, 'both', true);
+            if (!this.player) {
+                this.player = new Player(this.filename, 'both', true);
+            }
             callback();
         }
     } else {
         this.log('Stopping player.');
-        this.player.quit();
+        if (this.player) {
+            this.player.quit();
+        } else {
+            this.log('Couldn\'t stop player, please close it manually.');
+        }
         callback();
     }
     
