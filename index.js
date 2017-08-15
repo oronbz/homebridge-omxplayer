@@ -43,7 +43,7 @@ OmxPlayer.prototype._setOn = function(on, callback) {
                     self.log('Player is already on. Doing nothing...');
                 } else {
                     self.log('Playing downloaded file.');
-                    self.player = new Player(filename, 'both', true);
+                    self.player = new Player(filename, 'both', true, self.log);
                 }
                 callback();
             });
