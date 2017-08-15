@@ -28,29 +28,31 @@ OmxPlayer.prototype.getServices = function() {
 }
 
 OmxPlayer.prototype._setOn = function(on, callback) {
-    
     this.log('Setting omxplayer switch to ' + on);
-    
     if (on) {
-        if (this.youtube) {
+        if (this.player) {
+            this.log('Player is already on. Doing nothing...');
+            callback();
+            return;
+        }
+        if (this.youtube) {   
             this.log('Youtube url found in config, downloading...');
             var self = this;
             downloader.download(this.youtube, this.log, function (err, filename) {
-                self.log('Playing downloaded file.');
-                if (!self.player) {
+                if (self.player) {
+                    self.log('Player is already on. Doing nothing...');
+                } else {
+                    self.log('Playing downloaded file.');
                     self.player = new Player(filename, 'both', true);
                 }
-                callback();            
+                callback();
             });
         } else if (this.filename) {
             this.log('Filename found, playing video.');
-            if (!this.player) {
-                this.player = new Player(this.filename, 'both', true);
-            }
+            this.player = new Player(this.filename, 'both', true, this.log);
             callback();
         }
     } else {
-        this.log('Stopping player.');
         if (this.player) {
             this.player.quit();
         } else {
