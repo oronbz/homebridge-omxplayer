@@ -1,5 +1,5 @@
 
-# "OmxPlayer" Plugin
+# homebridge-omxplayer
 A Raspberry Pi (only) Plugin to download and play any YouTube video or a local video file using `omxplayer`.
 
 ## Example config.json:
