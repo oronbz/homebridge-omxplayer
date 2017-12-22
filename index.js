@@ -42,7 +42,7 @@ OmxPlayer.prototype.accessories = function(callback) {
         }
         var accessory = new trackAccessory(this.log, track, this);
         myAccessories.push(accessory);
-        self.trackAccessories.push(accessory);
+        this.trackAccessories.push(accessory);
         this.log('Created New Track Accessory: "' + track.name + '"');
     }
 
