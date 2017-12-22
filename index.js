@@ -112,11 +112,11 @@ trackAccessory.prototype = {
         if (on) {
             if (this.platform.player){
                 this.log('Switching Track to ' + this.filename );
-                this.platform.player.newSource(this.filename, this.loop, this.log, this.platform.volume);
+                this.platform.player.newSource(this.filename, this.loop, this.platform.volume, this.log);
 
             } else {
                 this.log('Playing ' + this.filename );
-                this.platform.player = new Player(this.filename, this.loop, this.log, this.platform.volume);
+                this.platform.player = new Player(this.filename, this.loop, this.platform.volume, this.log);
             }
             callback();
 
@@ -177,11 +177,11 @@ playPlaylistAccessory.prototype = {
                 async.eachOfSeries(self.playlist, function (track, index, next) {
                     if (self.platform.player == null){
                         self.log('Playing ' + track.name );
-                        self.platform.player.newSource(track.filename, self.loop, self.log, self.platform.volume);
+                        self.platform.player.newSource(track.filename, self.loop, self.platform.volume, self.log);
         
                     } else {
                         self.log('Playing ' + track.name );
-                        self.platform.player = new Player(track.filename, self.loop, self.log, self.platform.volume);
+                        self.platform.player = new Player(track.filename, self.loop, self.platform.volume, self.log);
                     }
 
                     var closed = false;
@@ -267,11 +267,11 @@ shuffleAccessory.prototype = {
                     var shuffledIndex = Math.floor(Math.random() * self.playlist.length);
                     if (self.platform.player == null){
                         self.log('Playing ' + self.playlist[shuffledIndex].name );
-                        self.platform.player.newSource(self.playlist[shuffledIndex].filename, self.loop, self.log, self.platform.volume);
+                        self.platform.player.newSource(self.playlist[shuffledIndex].filename, self.loop, self.platform.volume, self.log);
         
                     } else {
                         self.log('Playing ' + track.name );
-                        self.platform.player = new Player(self.playlist[shuffledIndex].filename, self.loop, self.log, self.platform.volume);
+                        self.platform.player = new Player(self.playlist[shuffledIndex].filename, self.loop, self.platform.volume, self.log);
                     }
                     
                     var closed = false;
