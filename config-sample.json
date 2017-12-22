@@ -1,0 +1,47 @@
+{
+    "bridge": {
+        "name": "Homebridge",
+        "username": "CD:21:3D:E3:CE:38",
+        "port": 51826,
+        "pin": "031-45-154"
+    },
+
+    "description": "This is an example configuration for OMX Player homebridge plugin",
+
+    "platforms": [{
+        "platform": "OmxPlayer",
+        "name": "Baby Playlist",
+        "playPlaylistSwitch": true,
+        "shuffleSwitch": true,
+        "repeatAll": true,
+        "volumeControl": true,
+        "playlist": [
+        {
+            "switchName": "Coldplay Babies Go",
+            "youtube": "https://www.youtube.com/watch?v=t7G-hU5Eaxc",
+               "loop": false
+           },
+        {
+            "switchName": "Beatles Babies Go",
+            "youtube": "https://youtu.be/cF4jiDsifmo",
+               "loop": false
+           },
+        {
+            "switchName": "testFile",
+            "filename": "my_video.mp4"
+           },
+        {
+            "switchName": "Lullaby",
+            "youtube": "https://www.youtube.com/watch?v=TAGP3LwyP0M"
+           },
+        {
+            "switchName": "Lullaby2",
+            "youtube": "https://www.youtube.com/watch?v=Bhh9OQKh-Sc"
+           },
+        {
+            "switchName": "Lullaby3",
+            "youtube": "https://www.youtube.com/watch?v=Bhh9OQKh-Sc"
+           }
+    ]
+    }]
+}
