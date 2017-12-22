@@ -80,6 +80,7 @@ function trackAccessory(log, config, platform) {
     this.filename = config.filename;
     this.loop = config.loop;
     this.path = platform.path
+    this.platform = platform
 
     if (this.youtube) {   
         this.log('Youtube url found in config, downloading...');
@@ -107,26 +108,27 @@ trackAccessory.prototype = {
     },
     
     setOn: function(on, callback){
+        var self = this;
         if (on) {
-            if (platform.player){
+            if (this.platform.player){
                 this.log('Switching Track to ' + this.name );
-                platform.player.newSource(this.filename, this.loop, self.log, platform.volume);
+                this.platform.player.newSource(this.filename, this.loop, this.log, this.platform.volume);
 
             } else {
                 this.log('Playing ' + this.name );
-                platform.player = new Player(this.filename, this.loop, self.log, platform.volume);
+                this.platform.player = new Player(this.filename, this.loop, this.log, this.platform.volume);
             }
             callback();
 
-            platform.player.waitForClose(function(){
+            this.platform.player.waitForClose(function(){
                 // self.log(self.name + ' Stopped!');
                 self._service.getCharacteristic(Characteristic.On).updateValue(false)
             })
 
         } else {
-            if (platform.player) {
-                platform.player.quit();
-                platform.player = null;
+            if (this.platform.player) {
+                this.platform.player.quit();
+                this.platform.player = null;
             } else {
                 this.log('Player is already closed');
             }
@@ -144,6 +146,7 @@ function playPlaylistAccessory(log, platform) {
     this.loop = false;
     this.repeatAll = platform.repeatAll;
     this.keepPlaying = this.repeatAll
+    this.platform = platform;
 
 }   
 
@@ -157,7 +160,7 @@ playPlaylistAccessory.prototype = {
         var informationService = new Service.AccessoryInformation();
             informationService
                 .setCharacteristic(Characteristic.Manufacturer, 'OMX Player')
-                .setCharacteristic(Characteristic.Model, "Play Playlist-"+platform.name)
+                .setCharacteristic(Characteristic.Model, "Play Playlist-"+this.platform.name)
             
         return [this._service, informationService];
     },
@@ -168,24 +171,24 @@ playPlaylistAccessory.prototype = {
             this.keepPlaying = this.repeatAll
             callback();
 
-            self.log('Playing Playlist - ' + platform.name);
+            self.log('Playing Playlist - ' + this.platform.name);
 
             function playIt(){
                 async.eachOfSeries(self.playlist, function (track, index, next) {
-                    if (platform.player == null){
+                    if (self.platform.player == null){
                         self.log('Playing ' + track.name );
-                        platform.player.newSource(track.filename, self.loop, self.log, platform.volume);
+                        self.platform.player.newSource(track.filename, self.loop, self.log, self.platform.volume);
         
                     } else {
                         self.log('Playing ' + track.name );
-                        platform.player = new Player(track.filename, self.loop, self.log, platform.volume);
+                        self.platform.player = new Player(track.filename, self.loop, self.log, self.platform.volume);
                     }
 
                     var closed = false;
                     var nextInterval = setInterval(function(){
-                        if (platform.nextRequest){
+                        if (self.platform.nextRequest){
                             clearInterval(nextInterval)
-                            platform.nextRequest = false
+                            self.platform.nextRequest = false
                             next();
                         } else if (closed){
                             clearInterval(nextInterval)
@@ -194,7 +197,7 @@ playPlaylistAccessory.prototype = {
                         }
                     },2000)
 
-                    platform.player.waitForClose(function(){
+                    self.platform.player.waitForClose(function(){
                         closed = true;
                     })
 
@@ -213,9 +216,9 @@ playPlaylistAccessory.prototype = {
 
         } else {
             this.keepPlaying = false
-            if (platform.player) {
-                platform.player.quit();
-                platform.player = null;
+            if (this.platform.player) {
+                this.platform.player.quit();
+                this.platform.player = null;
             } else {
                 this.log('Player is already closed');
             }
@@ -232,6 +235,7 @@ function shuffleAccessory(log, platform) {
     this.loop = false;
     this.repeatAll = platform.repeatAll;
     this.keepPlaying = this.repeatAll
+    this.platform = platform
 
 }   
 
@@ -245,7 +249,7 @@ shuffleAccessory.prototype = {
         var informationService = new Service.AccessoryInformation();
             informationService
                 .setCharacteristic(Characteristic.Manufacturer, 'OMX Player')
-                .setCharacteristic(Characteristic.Model, "Play Shuffle-"+platform.name)
+                .setCharacteristic(Characteristic.Model, "Play Shuffle-"+this.platform.name)
             
         return [this._service, informationService];
     },
@@ -256,25 +260,25 @@ shuffleAccessory.prototype = {
             this.keepPlaying = this.repeatAll
             callback();
 
-            self.log('Playing Playlist Shuffled - ' + platform.name);
+            self.log('Playing Playlist Shuffled - ' + this.platform.name);
 
             function playIt(){
                 async.eachOfSeries(self.playlist, function (track, index, next) {
                     var shuffledIndex = Math.floor(Math.random() * self.playlist.length);
-                    if (platform.player == null){
+                    if (self.platform.player == null){
                         self.log('Playing ' + self.playlist[shuffledIndex].name );
-                        platform.player.newSource(self.playlist[shuffledIndex].filename, self.loop, self.log, platform.volume);
+                        self.platform.player.newSource(self.playlist[shuffledIndex].filename, self.loop, self.log, self.platform.volume);
         
                     } else {
                         self.log('Playing ' + track.name );
-                        platform.player = new Player(self.playlist[shuffledIndex].filename, self.loop, self.log, platform.volume);
+                        self.platform.player = new Player(self.playlist[shuffledIndex].filename, self.loop, self.log, self.platform.volume);
                     }
                     
                     var closed = false;
                     var nextInterval = setInterval(function(){
-                        if (platform.nextRequest){
+                        if (self.platform.nextRequest){
                             clearInterval(nextInterval)
-                            platform.nextRequest = false
+                            self.platform.nextRequest = false
                             next();
                         } else if (closed){
                             clearInterval(nextInterval)
@@ -283,7 +287,7 @@ shuffleAccessory.prototype = {
                         }
                     },2000)
 
-                    platform.player.waitForClose(function(){
+                    self.platform.player.waitForClose(function(){
                         closed = true;
                     })
 
@@ -303,9 +307,9 @@ shuffleAccessory.prototype = {
 
         } else {
             this.keepPlaying = false
-            if (platform.player) {
-                platform.player.quit();
-                platform.player = null;
+            if (thisplatform.player) {
+                this.platform.player.quit();
+                this.platform.player = null;
             } else {
                 this.log('Player is already closed');
             }
@@ -319,6 +323,7 @@ shuffleAccessory.prototype = {
 function playNextAccessory(log, platform) {
     this.log = log;
     this.name = "PlayNext " + platform.name;
+    this.platform = platform;
 
 }   
 
@@ -332,7 +337,7 @@ playNextAccessory.prototype = {
         var informationService = new Service.AccessoryInformation();
             informationService
                 .setCharacteristic(Characteristic.Manufacturer, 'OMX Player')
-                .setCharacteristic(Characteristic.Model, "Play Next-"+platform.name)
+                .setCharacteristic(Characteristic.Model, "Play Next-"+this.platform.name)
             
         return [this._service, informationService];
     },
@@ -356,7 +361,7 @@ function volumeAccessory(log, platform) {
     this.log = log;
     this.name = "Volume " + platform.name;
     this.volumeBeforeMute = 100;
-
+    this.platform = platform
 }
 
 volumeAccessory.prototype = {
@@ -381,23 +386,23 @@ volumeAccessory.prototype = {
     setMuteState: function(on, callback){
         if (on) {
             this.log('Disable Mute on Player...');
-            if (platform.player) platform.player.setVolume(this.volumeBeforeMute, platfrom.volume);
+            if (this.platform.player) this.platform.player.setVolume(this.volumeBeforeMute, this.platform.volume);
             else this.log('Nothing is playing, But setting anyway');
-            platfrom.volume = this.volumeBeforeMute
+            this.platform.volume = this.volumeBeforeMute
         } else {
             this.log('Setting Player to Mute...');
-            if (platform.player) platform.player.setVolume(0, platfrom.volume);
+            if (this.platform.player) this.platform.player.setVolume(0, this.platform.volume);
             else this.log('Nothing is playing, But setting anyway');
-            platfrom.volume = 0
+            this.platform.volume = 0
         }
         callback();
     },
 
     setVolume: function(state, callback){
         this.log('Setting Volume to ' + state);
-        if (platform.player) platform.player.setVolume(state, platfrom.volume);
+        if (this.platform.player) this.platform.player.setVolume(state, this.platform.volume);
         else this.log('Nothing is playing, But setting anyway');
-        platfrom.volume = state 
+        this.platform.volume = state 
         if (state !== 0) this.volumeBeforeMute = state 
         callback();
     }
