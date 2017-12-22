@@ -86,7 +86,7 @@ function trackAccessory(log, config, platform) {
         this.log('Youtube url found in config, downloading...');
         var self = this;
         downloader.download(this.youtube, this.path, this.log, function (err, filename) {
-            this.filename = filename;
+            self.filename = filename;
             self.log('Finished Download: ' + filename);
         });
     }
