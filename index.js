@@ -19,7 +19,7 @@ function OmxPlayer(log, config) {
     this.shuffleSwitch = config.shuffleSwitch || false;
     this.repeatAll = config.repeatAll || false;
     this.playNextSwitch = config.playNextSwitch || true;
-    this.volumeControl = config.volumeControl || true;
+    this.volumeControl = config.volumeControl || false;
     this.playlist = config.playlist || [];
     this.path = config.path || HomebridgeAPI.user.persistPath()
     this.playingShuffle = false;
@@ -49,12 +49,14 @@ OmxPlayer.prototype.accessories = function(callback) {
     if (this.playPlaylistSwitch) {
         var accessory = new playPlaylistAccessory(this.log, this);
         myAccessories.push(accessory);
+        this.playPlaylistAccessory = accessory;
         this.log('Created New Play Playlist Accessory: "Play ' + this.name + '"');
     }
 
     if (this.shuffleSwitch) {
         var accessory = new shuffleAccessory(this.log, this);
         myAccessories.push(accessory);
+        this.shuffleAccessory = accessory;
         this.log('Created New Shuffle Accessory: "Shuffle ' + this.name + '"');
     }
 
@@ -110,6 +112,12 @@ trackAccessory.prototype = {
     setOn: function(on, callback){
         var self = this;
         if (on) {
+            for (q=0;q<self.platform.trackAccessories.length;q++){
+                if (this.platform.trackAccessories[q] !== this) self.platform.trackAccessories[q]._service.getCharacteristic(Characteristic.On).updateValue(false)
+            }
+            this.platform.shuffleAccessory._service.getCharacteristic(Characteristic.On).updateValue(false)
+            this.platform.playPlaylistAccessory._service.getCharacteristic(Characteristic.On).updateValue(false)
+
             if (this.platform.player){
                 this.log('Switching Track to ' + this.filename );
                 this.platform.player.newSource(this.filename, this.loop, this.platform.volume, this.log);
@@ -126,6 +134,8 @@ trackAccessory.prototype = {
             })
 
         } else {
+            this.platform.shuffleAccessory._service.getCharacteristic(Characteristic.On).updateValue(false)
+            this.platform.playPlaylistAccessory._service.getCharacteristic(Characteristic.On).updateValue(false)
             if (this.platform.player) {
                 this.platform.player.quit();
                 this.platform.player = null;
@@ -167,14 +177,19 @@ playPlaylistAccessory.prototype = {
     
     setOn: function(on, callback){
         var self = this;
+        var nextInterval
         if (on) {
             this.keepPlaying = this.repeatAll
             callback();
-
+            this.platform.shuffleAccessory._service.getCharacteristic(Characteristic.On).updateValue(false)
             self.log('Playing Playlist - ' + this.platform.name);
-
+            
             function playIt(){
                 async.eachOfSeries(self.playlist, function (track, index, next) {
+                    for (q=0;q<self.platform.trackAccessories.length;q++){
+                        if (self.platform.trackAccessories[q].name == track.name) self.platform.trackAccessories[q]._service.getCharacteristic(Characteristic.On).updateValue(true)
+                        else self.platform.trackAccessories[q]._service.getCharacteristic(Characteristic.On).updateValue(false)
+                    }
                     if (self.platform.player !== null){
                         self.log('Playing ' + track.name );
                         self.platform.player.newSource(track.filename, self.loop, self.platform.volume, self.log);
@@ -185,14 +200,15 @@ playPlaylistAccessory.prototype = {
                     }
 
                     var closed = false;
-                    var nextInterval = setInterval(function(){
+                    nextInterval = setInterval(function(){
                         if (self.platform.nextRequest){
                             clearInterval(nextInterval)
+                            self.log("Playing next track...")
                             self.platform.nextRequest = false
                             next();
                         } else if (closed){
                             clearInterval(nextInterval)
-                            self.log(self.playlist[shuffledIndex].name + ' Stopped!');
+                            self.log(self.playlist[index].name + ' Stopped!');
                             next();
                         }
                     },2000)
@@ -215,6 +231,10 @@ playPlaylistAccessory.prototype = {
             playIt()
 
         } else {
+            clearInterval(nextInterval)
+            for (q=0;q<self.platform.trackAccessories.length;q++){
+                this.platform.trackAccessories[q]._service.getCharacteristic(Characteristic.On).updateValue(false)
+            }
             this.keepPlaying = false
             if (this.platform.player) {
                 this.platform.player.quit();
@@ -256,33 +276,52 @@ shuffleAccessory.prototype = {
     
     setOn: function(on, callback){
         var self = this;
+        var nextShuffleInterval;
         if (on) {
             this.keepPlaying = this.repeatAll
             callback();
-
+            this.platform.playPlaylistAccessory._service.getCharacteristic(Characteristic.On).updateValue(false);
             self.log('Playing Playlist Shuffled - ' + this.platform.name);
 
-            function playIt(){
-                async.eachOfSeries(self.playlist, function (track, index, next) {
-                    var shuffledIndex = Math.floor(Math.random() * self.playlist.length);
+            function shuffle(a) {
+                for (let i = a.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [a[i], a[j]] = [a[j], a[i]];
+                }
+                return a;
+            }
+            var shuffledPlaylist = []
+            for (t=0;t<this.playlist.length;t++){
+                shuffledPlaylist.push(this.playlist[t])
+            }
+            var shuffledPlaylist = shuffle(shuffledPlaylist)
+            
+            function playItShuffled(){
+                async.eachOfSeries(shuffledPlaylist, function (track, index, next) {
+
+                    for (q=0;q<self.platform.trackAccessories.length;q++){
+                        if (self.platform.trackAccessories[q].name == track.name) self.platform.trackAccessories[q]._service.getCharacteristic(Characteristic.On).updateValue(true)
+                        else self.platform.trackAccessories[q]._service.getCharacteristic(Characteristic.On).updateValue(false)
+                    }
                     if (self.platform.player !== null){
-                        self.log('Playing ' + self.playlist[shuffledIndex].name );
-                        self.platform.player.newSource(self.playlist[shuffledIndex].filename, self.loop, self.platform.volume, self.log);
+                        self.log('Playing ' + track.name );
+                        self.platform.player.newSource(track.filename, self.loop, self.platform.volume, self.log);
         
                     } else {
                         self.log('Playing ' + track.name );
-                        self.platform.player = new Player(self.playlist[shuffledIndex].filename, self.loop, self.platform.volume, self.log);
+                        self.platform.player = new Player(track.filename, self.loop, self.platform.volume, self.log);
                     }
                     
                     var closed = false;
-                    var nextInterval = setInterval(function(){
+                    nextShuffleInterval = setInterval(function(){
                         if (self.platform.nextRequest){
-                            clearInterval(nextInterval)
+                            clearInterval(nextShuffleInterval)
+                            self.log("Playing next track...")
                             self.platform.nextRequest = false
                             next();
                         } else if (closed){
-                            clearInterval(nextInterval)
-                            self.log(self.playlist[shuffledIndex].name + ' Stopped!');
+                            clearInterval(nextShuffleInterval)
+                            self.log(track.name + ' Stopped!');
                             next();
                         }
                     },2000)
@@ -295,7 +334,7 @@ shuffleAccessory.prototype = {
                 }, function (err) {
                     if (self.keepPlaying){
                         self.log('Playing Playlist Shuffled Again...' );
-                        playIt()
+                        playItShuffled()
                     } else {
                         self.log('Playlist is over...');
                         self._service.getCharacteristic(Characteristic.On).updateValue(false)
@@ -303,11 +342,15 @@ shuffleAccessory.prototype = {
                     }
                 });
             }
-            playIt()
+            playItShuffled()
 
         } else {
+            clearInterval(nextShuffleInterval)
+            for (q=0;q<self.platform.trackAccessories.length;q++){
+                this.platform.trackAccessories[q]._service.getCharacteristic(Characteristic.On).updateValue(false)
+            }
             this.keepPlaying = false
-            if (thisplatform.player) {
+            if (this.platform.player) {
                 this.platform.player.quit();
                 this.platform.player = null;
             } else {
@@ -322,7 +365,7 @@ shuffleAccessory.prototype = {
 
 function playNextAccessory(log, platform) {
     this.log = log;
-    this.name = "PlayNext " + platform.name;
+    this.name = "Play Next " + platform.name;
     this.platform = platform;
 
 }   
@@ -346,11 +389,11 @@ playNextAccessory.prototype = {
         var self = this;
         if (on) {
             console.log("Next Song Requested")
-            this.nextRequest = true;
+            this.platform.nextRequest = true;
             callback();
             setTimeout(function(){
                 self._service.getCharacteristic(Characteristic.On).updateValue(false)
-                self.nextRequest = false;
+                self.platform.nextRequest = false;
             }, 3000)
         }
     }
@@ -370,10 +413,12 @@ volumeAccessory.prototype = {
         this._service = new Service.Lightbulb(this.name);
         this._service
             .getCharacteristic(Characteristic.On)
+            .on('get', this.getMuteState.bind(this))
             .on('set', this.setMuteState.bind(this));
         
         this._service
             .addCharacteristic(new Characteristic.Brightness())
+            .on('get', this.getVolume.bind(this))
             .on('set', this.setVolume.bind(this));
 
         var informationService = new Service.AccessoryInformation();
@@ -384,6 +429,12 @@ volumeAccessory.prototype = {
         return [this._service, informationService];
     },
     
+    getMuteState: function(callback){
+        this.log("this.platform mute: "  +this.platform.volume)
+        if (this.platform.volume == 0) callback(null, false)
+        else  callback(null, true)
+    },
+
     setMuteState: function(on, callback){
         if (on) {
             this.log('Disable Mute on Player...');
@@ -399,8 +450,12 @@ volumeAccessory.prototype = {
         callback();
     },
 
+    getVolume: function(callback){
+        this.log("this.platform.volume: "  + this.platform.volume)
+        callback(null, this.platform.volume)
+    },
+
     setVolume: function(state, callback){
-        this.log('Setting Volume to ' + state);
         if (this.platform.player) this.platform.player.setVolume(state, this.platform.volume);
         else this.log('Nothing is playing, But setting anyway');
         this.platform.volume = state 

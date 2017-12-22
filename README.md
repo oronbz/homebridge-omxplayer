@@ -2,29 +2,64 @@
 # homebridge-omxplayer
 A Raspberry Pi (only) Plugin to download and play any YouTube video or a local video file using `omxplayer`.
 
+#### New version (2.0)  - This plugin is a platform now and have many new features:
+
+**Play Playlist** - to play the tracks in their order.
+
+**Play Playlist Shuffle** - to play tracks in a random order.
+
+**Play Next Switch** - to play the next song in the list.
+
+**Repeat All** - set to true to allow the playlist to repeat itsef when it**s done.
+
+**Volume Control** Light Bulb - to control the volume of the track, when set to false 100% volume will be used.
+
+**Path** in config - to choose which folder to download the files. when not set, the default persist folder will be chosen.
+
 ## Example config.json:
 
-### YouTube Link:
  ```
-    "accessories": [
-        {
-          "accessory": "OmxPlayer",
-          "name": "OmxPlayer",
-          "youtube": "https://www.youtube.com/watch?v=lf_wVfwpfp8"
-        }   
-    ]
-
-```
-
-### Local File:
- ```
-    "accessories": [
-        {
-          "accessory": "OmxPlayer",
-          "name": "OmxPlayer",
-          "filename": "my_video.mp4"
-        }   
-    ]
+"platforms": [
+    {
+        "platform": "OmxPlayer",
+        "name": "Baby Playlist",
+        "playPlaylistSwitch": true,
+        "shuffleSwitch": true,
+        "repeatAll": true,
+        "path": "remove this row to download to default persist folder",
+        "playNextSwitch": true,
+        "volumeControl": true,
+        "playlist": [
+            {
+                "switchName": "Coldplay Babies Go",
+                "youtube": "https://www.youtube.com/watch?v=t7G-hU5Eaxc",
+                "loop": false
+            },
+            {
+                "switchName": "Beatles Babies Go",
+                "youtube": "https://youtu.be/cF4jiDsifmo",
+                "loop": false
+            },
+            {
+                "switchName": "testFile",
+                "filename": "my_video.mp4"
+            },
+            {
+                "switchName": "Lullaby",
+                "youtube": "https://www.youtube.com/watch?v=TAGP3LwyP0M",
+                "loop": true
+            },
+            {
+                "switchName": "Lullaby2",
+                "youtube": "https://www.youtube.com/watch?v=Bhh9OQKh-Sc"
+            },
+            {
+                "switchName": "Lullaby3",
+                "youtube": "https://www.youtube.com/watch?v=Bhh9OQKh-Sc"
+            }
+        ]
+    }
+]
 
 ```
 
@@ -41,8 +76,7 @@ Basically, all you need to do is:
 1. Set the desired youtube url or local filename.
 2. Use this switch in any scene or automation.
 
-When using the switch (with Youtube), only for the first time, the video will be downloaded which should take a few seconds.
-Every time the Raspberry will be rebooted, all saved (youtube) videos will be deleted from the device.
+when setting a new youtube link, only for the first time,the video will be downloaded which should take a few seconds.
 
 ## How to install
  ```sudo apt-get install omxplayer```
