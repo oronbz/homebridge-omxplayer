@@ -111,11 +111,11 @@ trackAccessory.prototype = {
         var self = this;
         if (on) {
             if (this.platform.player){
-                this.log('Switching Track to ' + this.name );
+                this.log('Switching Track to ' + this.filename );
                 this.platform.player.newSource(this.filename, this.loop, this.log, this.platform.volume);
 
             } else {
-                this.log('Playing ' + this.name );
+                this.log('Playing ' + this.filename );
                 this.platform.player = new Player(this.filename, this.loop, this.log, this.platform.volume);
             }
             callback();
