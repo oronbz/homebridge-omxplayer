@@ -1,5 +1,3 @@
-import { clearInterval } from 'timers';
-
 var Player = require('./lib/player');
 var downloader = require('./lib/downloader');
 var async = require("async")

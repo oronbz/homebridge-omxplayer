@@ -14,6 +14,7 @@
         "playPlaylistSwitch": true,
         "shuffleSwitch": true,
         "repeatAll": true,
+        "playNextSwitch": true,
         "volumeControl": true,
         "playlist": [
         {
