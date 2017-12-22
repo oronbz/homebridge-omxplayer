@@ -34,6 +34,7 @@
   "homepage": "https://github.com/oronbz/homebridge-omxplayer#readme",
   "dependencies": {
     "node-omxplayer": "^0.6.1",
-    "youtube-dl": "^1.11.1"
+    "youtube-dl": "^1.11.1",
+    "async": "*"
   }
 }
