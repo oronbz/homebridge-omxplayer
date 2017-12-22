@@ -175,7 +175,7 @@ playPlaylistAccessory.prototype = {
 
             function playIt(){
                 async.eachOfSeries(self.playlist, function (track, index, next) {
-                    if (self.platform.player == null){
+                    if (self.platform.player !== null){
                         self.log('Playing ' + track.name );
                         self.platform.player.newSource(track.filename, self.loop, self.platform.volume, self.log);
         
@@ -265,7 +265,7 @@ shuffleAccessory.prototype = {
             function playIt(){
                 async.eachOfSeries(self.playlist, function (track, index, next) {
                     var shuffledIndex = Math.floor(Math.random() * self.playlist.length);
-                    if (self.platform.player == null){
+                    if (self.platform.player !== null){
                         self.log('Playing ' + self.playlist[shuffledIndex].name );
                         self.platform.player.newSource(self.playlist[shuffledIndex].filename, self.loop, self.platform.volume, self.log);
         
@@ -350,7 +350,8 @@ playNextAccessory.prototype = {
             callback();
             setTimeout(function(){
                 self._service.getCharacteristic(Characteristic.On).updateValue(false)
-            }, 2000)
+                self.nextRequest = false;
+            }, 3000)
         }
     }
 }
