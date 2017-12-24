@@ -15,6 +15,7 @@
             "playPlaylistSwitch": true,
             "shuffleSwitch": true,
             "repeatAll": true,
+            "format": "18",
             "path": "remove this row to download to default persist folder",
             "playNextSwitch": true,
             "volumeControl": true,

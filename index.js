@@ -20,6 +20,7 @@ function OmxPlayer(log, config) {
     this.repeatAll = config.repeatAll || false;
     this.playNextSwitch = config.playNextSwitch || false;
     this.volumeControl = config.volumeControl || false;
+    this.format = config.format || 18;
     this.playlist = config.playlist || [];
     this.path = config.path || HomebridgeAPI.user.persistPath()
     this.playingShuffle = false;
@@ -87,7 +88,7 @@ function trackAccessory(log, config, platform) {
     if (this.youtube) {   
         this.log('Youtube url found in config, downloading...');
         var self = this;
-        downloader.download(this.youtube, this.path, this.log, function (err, filename) {
+        downloader.download(this.youtube, this.path, this.platform.format, this.log, function (err, filename) {
             self.filename = filename;
             self.log('Finished Download: ' + filename);
         });

@@ -14,6 +14,8 @@ A Raspberry Pi (only) Plugin to download and play any YouTube video or a local v
 
 **Volume Control** Light Bulb - to control the volume of the track, when set to false 100% volume will be used.
 
+**Format** in config - for choosing the quality of the downloaded file. USE WITH CAUTION - See Formats table below.
+
 **Path** in config - to choose which folder to download the files. when not set, the default persist folder will be chosen.
 
 ## Example config.json:
@@ -26,6 +28,7 @@ A Raspberry Pi (only) Plugin to download and play any YouTube video or a local v
         "playPlaylistSwitch": true,
         "shuffleSwitch": true,
         "repeatAll": true,
+        "format": "18",
         "path": "remove this row to download to default persist folder",
         "playNextSwitch": true,
         "volumeControl": true,
@@ -100,6 +103,45 @@ Delete any `.mp4` files inside your `/tmp` folder.
 Make sure your `home` folder exists at `/home/USERNAME` and run `sudo chmod -R 0777 /home/USERNAME`
 
 Reboot and try again.
+
+
+
+
+## Formats
+
+### Easy Formats
+**"best"**: Select the best quality format represented by a single file with video and audio.
+
+**"worst"**: Select the worst quality format represented by a single file with video and audio.
+
+**"bestvideo"**: Select the best quality video-only format (e.g. DASH video). May not be available.
+
+**"worstvideo"**: Select the worst quality video-only format. May not be available.
+
+**"bestaudio"**: Select the best quality audio only-format. May not be available.
+
+**"worstaudio"**: Select the worst quality audio only-format. May not be available
+
+
+
+### For Experts 
+#### it will only download if this version is available for all your tracks
+
+|  format code |  extension | resolution |  note  |
+| ------------ | ---------- | ------------ | ------ |
+| 140          |     m4a    |   audio only |  DASH audio , audio@128k (worst)|
+| 160          |     mp4    |   144p       |  DASH video , video only|
+| 133          |     mp4    |   240p       |  DASH video , video only| 
+| 134          |     mp4    |   360p       |  DASH video , video only| 
+| 135          |     mp4    |   480p       |  DASH video , video only| 
+| 136          |     mp4    |   720p       |  DASH video , video only| 
+| 17           |     3gp    |   176x144    |  | 
+| 36           |     3gp    |   320x240    |  | 
+| 5            |     flv    |   400x240    |  | 
+| 43           |     webm   |   640x360    |  | 
+| 18           |     mp4    |   640x360    |  | 
+| 22           |     mp4    |   1280x720   |  (best)| 
+
  
 ## Credits
 This plugin was inspired by homebridge-dummy by **@nfarina** and the idea for this plugin came from my little brother **@nitaybz** which has written many other plugins already, so you should definitely explore his repos too: https://github.com/nitaybz?tab=repositories
