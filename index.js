@@ -115,8 +115,8 @@ trackAccessory.prototype = {
             for (q=0;q<self.platform.trackAccessories.length;q++){
                 if (this.platform.trackAccessories[q] !== this) self.platform.trackAccessories[q]._service.getCharacteristic(Characteristic.On).updateValue(false)
             }
-            this.platform.shuffleAccessory._service.getCharacteristic(Characteristic.On).updateValue(false)
-            this.platform.playPlaylistAccessory._service.getCharacteristic(Characteristic.On).updateValue(false)
+            if (this.platform.shuffleSwitch) this.platform.shuffleAccessory._service.getCharacteristic(Characteristic.On).updateValue(false)
+            if (this.platform.playingPlaylist) this.platform.playPlaylistAccessory._service.getCharacteristic(Characteristic.On).updateValue(false)
 
             if (this.platform.player){
                 this.log('Switching Track to ' + this.filename );
@@ -134,8 +134,8 @@ trackAccessory.prototype = {
             })
 
         } else {
-            this.platform.shuffleAccessory._service.getCharacteristic(Characteristic.On).updateValue(false)
-            this.platform.playPlaylistAccessory._service.getCharacteristic(Characteristic.On).updateValue(false)
+            if (this.platform.shuffleSwitch) this.platform.shuffleAccessory._service.getCharacteristic(Characteristic.On).updateValue(false)
+            if (this.platform.playingPlaylist) this.platform.playPlaylistAccessory._service.getCharacteristic(Characteristic.On).updateValue(false)
             if (this.platform.player) {
                 this.platform.player.quit();
                 this.platform.player = null;
@@ -181,7 +181,7 @@ playPlaylistAccessory.prototype = {
         if (on) {
             this.keepPlaying = this.repeatAll
             callback();
-            this.platform.shuffleAccessory._service.getCharacteristic(Characteristic.On).updateValue(false)
+            if (this.platform.shuffleSwitch) this.platform.shuffleAccessory._service.getCharacteristic(Characteristic.On).updateValue(false)
             self.log('Playing Playlist - ' + this.platform.name);
             
             function playIt(){
@@ -280,7 +280,7 @@ shuffleAccessory.prototype = {
         if (on) {
             this.keepPlaying = this.repeatAll
             callback();
-            this.platform.playPlaylistAccessory._service.getCharacteristic(Characteristic.On).updateValue(false);
+            if (this.platform.playingPlaylist) this.platform.playPlaylistAccessory._service.getCharacteristic(Characteristic.On).updateValue(false);
             self.log('Playing Playlist Shuffled - ' + this.platform.name);
 
             function shuffle(a) {
