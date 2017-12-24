@@ -14,7 +14,7 @@ A Raspberry Pi (only) Plugin to download and play any YouTube video or a local v
 
 **Volume Control** Light Bulb - to control the volume of the track, when set to false 100% volume will be used.
 
-**Format** in config - for choosing the quality of the downloaded file. USE WITH CAUTION - See Formats table below.
+**Format** in config - for choosing the quality of the downloaded file. USE WITH CAUTION - See "Formats" section below.
 
 **Path** in config - to choose which folder to download the files. when not set, the default persist folder will be chosen.
 
