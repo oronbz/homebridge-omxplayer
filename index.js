@@ -15,10 +15,10 @@ function OmxPlayer(log, config) {
     console.log('OmxPlayer plugin started!');
     this.log = log;
     this.name = config.name;
-    this.playPlaylistSwitch = config.playPlaylistSwitch || true;
+    this.playPlaylistSwitch = config.playPlaylistSwitch || false;
     this.shuffleSwitch = config.shuffleSwitch || false;
     this.repeatAll = config.repeatAll || false;
-    this.playNextSwitch = config.playNextSwitch || true;
+    this.playNextSwitch = config.playNextSwitch || false;
     this.volumeControl = config.volumeControl || false;
     this.playlist = config.playlist || [];
     this.path = config.path || HomebridgeAPI.user.persistPath()
