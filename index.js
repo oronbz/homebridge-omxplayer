@@ -23,6 +23,7 @@ function OmxPlayer(log, config) {
     this.format = config.format || 18;
     this.playlist = config.playlist || [];
     this.path = config.path || HomebridgeAPI.user.persistPath()
+    this.output = config.output || 'both';
     this.playingShuffle = false;
     this.playingPlaylist = false;
     this.playingIndividual = false;
@@ -121,11 +122,11 @@ trackAccessory.prototype = {
 
             if (this.platform.player){
                 this.log('Switching Track to ' + this.filename );
-                this.platform.player.newSource(this.filename, this.loop, this.platform.volume, this.log);
+                this.platform.player.newSource(this.filename, this.loop, this.platform.volume, self.platform.output, this.log);
 
             } else {
                 this.log('Playing ' + this.filename );
-                this.platform.player = new Player(this.filename, this.loop, this.platform.volume, this.log);
+                this.platform.player = new Player(this.filename, this.loop, this.platform.volume, self.platform.output, this.log);
             }
             callback();
 
@@ -193,11 +194,11 @@ playPlaylistAccessory.prototype = {
                     }
                     if (self.platform.player !== null){
                         self.log('Playing ' + track.name );
-                        self.platform.player.newSource(track.filename, self.loop, self.platform.volume, self.log);
+                        self.platform.player.newSource(track.filename, self.loop, self.platform.volume, self.platform.output, self.log);
         
                     } else {
                         self.log('Playing ' + track.name );
-                        self.platform.player = new Player(track.filename, self.loop, self.platform.volume, self.log);
+                        self.platform.player = new Player(track.filename, self.loop, self.platform.volume, self.platform.output, self.log);
                     }
 
                     var closed = false;
@@ -306,11 +307,11 @@ shuffleAccessory.prototype = {
                     }
                     if (self.platform.player !== null){
                         self.log('Playing ' + track.name );
-                        self.platform.player.newSource(track.filename, self.loop, self.platform.volume, self.log);
+                        self.platform.player.newSource(track.filename, self.loop, self.platform.volume, self.platform.output, self.log);
         
                     } else {
                         self.log('Playing ' + track.name );
-                        self.platform.player = new Player(track.filename, self.loop, self.platform.volume, self.log);
+                        self.platform.player = new Player(track.filename, self.loop, self.platform.volume, self.platform.output, self.log);
                     }
                     
                     var closed = false;
