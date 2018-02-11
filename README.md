@@ -18,7 +18,7 @@ A Raspberry Pi (only) Plugin to download and play any YouTube video or a local v
 
 **Path** in config - to choose which folder to download the files. when not set, the default persist folder will be chosen.
 
-**Path** in config - to select your audio output ("both, "hdmi", "PCM", "alsa") default to "both.
+**Output** in config - to select your audio output ("both, "hdmi", "local", "alsa"), default to "both.
 
 ## Example config.json:
 
