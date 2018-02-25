@@ -40,7 +40,7 @@ OmxPlayer.prototype.accessories = function(callback) {
             name: this.playlist[i].switchName,
             youtube: this.playlist[i].youtube,
             filename: this.playlist[i].filename,
-            loop: this.playlist[i].loop || true
+            loop: this.playlist[i].loop === true
         }
         var accessory = new trackAccessory(this.log, track, this);
         myAccessories.push(accessory);
