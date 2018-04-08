@@ -19,6 +19,7 @@
             "path": "remove this row to download to default persist folder",
             "playNextSwitch": true,
             "volumeControl": true,
+            "pauseSwitch": true,
             "playlist": [
                 {
                     "switchName": "Coldplay Babies Go",

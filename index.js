@@ -20,6 +20,7 @@ function OmxPlayer(log, config) {
     this.repeatAll = config.repeatAll || false;
     this.playNextSwitch = config.playNextSwitch || false;
     this.volumeControl = config.volumeControl || false;
+    this.pauseSwitch = config.pauseSwitch || false;
     this.format = config.format || 18;
     this.playlist = config.playlist || [];
     this.path = config.path || HomebridgeAPI.user.persistPath()
@@ -73,6 +74,13 @@ OmxPlayer.prototype.accessories = function(callback) {
         myAccessories.push(accessory);
         this.log('Created New Volume Control Accessory: "Volume ' + this.name + '"');
     }
+    
+    if (this.pauseSwitch) {
+        var accessory = new pauseSwitchAccessory(this.log, this);
+        myAccessories.push(accessory);
+        this.log('Created New Pause Switch Accessory: "Pause ' + this.name + '"');
+    }
+    
     callback(myAccessories);
 }
 
@@ -462,6 +470,49 @@ volumeAccessory.prototype = {
         else this.log('Nothing is playing, But setting anyway');
         this.platform.volume = state 
         if (state !== 0) this.volumeBeforeMute = state 
+        callback();
+    }
+}
+
+function pauseSwitchAccessory(log, platform) {
+    this.log = log;
+    this.name = "Pause " + platform.name;
+    this.platform = platform;
+
+}   
+
+
+pauseSwitchAccessory.prototype = {
+    getServices: function(){
+        this._service = new Service.Switch(this.name);
+        this._service.getCharacteristic(Characteristic.On)
+            .on('set', this.setOn.bind(this));
+
+        var informationService = new Service.AccessoryInformation();
+            informationService
+                .setCharacteristic(Characteristic.Manufacturer, 'OMX Player')
+                .setCharacteristic(Characteristic.Model, "Pause-"+this.platform.name)
+            
+        return [this._service, informationService];
+    },
+    
+    setOn: function(on, callback){
+        if (on) {
+            if (this.platform.player !== null){
+                console.log("Pausing " + this.platform.name)
+                 this.platform.player.pause();
+
+            } else {
+                this.log('Nothing to pause');    
+                this._service.getCharacteristic(Characteristic.On).updateValue(false)
+            }
+        } else {
+            if (this.platform.player !== null){
+                console.log("Resuming " + this.platform.name)
+                 this.platform.player.play();
+
+            } else this.log('Nothing to resume');
+        }
         callback();
     }
 }
