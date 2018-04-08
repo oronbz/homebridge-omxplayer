@@ -10,6 +10,8 @@ A Raspberry Pi (only) Plugin to download and play any YouTube video or a local v
 
 **Play Next Switch** - to play the next song in the list.
 
+**Pause Switch** - to pause/resume playback.
+
 **Repeat All** - set to true to allow the playlist to repeat itsef when it**s done.
 
 **Volume Control** Light Bulb - to control the volume of the track, when set to false 100% volume will be used.
@@ -19,6 +21,8 @@ A Raspberry Pi (only) Plugin to download and play any YouTube video or a local v
 **Path** in config - to choose which folder to download the files. when not set, the default persist folder will be chosen.
 
 **Output** in config - to select your audio output ("both, "hdmi", "local", "alsa"), default to "both.
+
+
 
 ## Example config.json:
 
@@ -34,6 +38,7 @@ A Raspberry Pi (only) Plugin to download and play any YouTube video or a local v
         "path": "remove this row to download to default persist folder",
         "output": "both",
         "playNextSwitch": true,
+        "pauseSwitch": true,
         "volumeControl": true,
         "playlist": [
             {
